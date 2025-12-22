@@ -1,19 +1,24 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-import utils
+from flask_cors import CORS 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/recommend": {"origins": "http://127.0.0.1:3000"}})
 
-@app.route('/recommend', methods=['POST'])
-def recommend_career():
-    data = request.get_json()
-    name = data.get("name")
-    skills = data.get("skills", "")
+from ml.model import generate_recommendations
+
+@app.route("/recommend", methods=["POST"])
+def recommend():
+    data = request.json
+    name = data.get("name", "")
     interests = data.get("interests", "")
+    skills = data.get("skills", "")
     dream = data.get("dream", "")
-    recommendations = utils.get_recommendations(skills, interests, dream)
-    return jsonify({"career": recommendations})
+    results = generate_recommendations(interests, skills, dream)
+    return jsonify({
+        "status": "success",
+        "name": name,
+        "recommendations": results
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)

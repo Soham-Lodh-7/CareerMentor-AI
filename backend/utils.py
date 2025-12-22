@@ -10,7 +10,7 @@ def get_recommendations(skills, interests, dream):
         results.append("Data Analyst")
     if "design" in interests:
         results.append("UI/UX designer")
-    if "machine learning" in interests and "artificial intelligence" in interests:
+    if "machine learning" in interests or "artificial intelligence" in interests:
         results.append("AI/ML Engineer")
     if dream:
         results.append(f"Path to become a {dream.title()}")
