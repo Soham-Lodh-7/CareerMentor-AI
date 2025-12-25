@@ -1,33 +1,33 @@
+import google.generativeai as genai
+
 def generate_recommendations(interests, skills, dream):
-    recommendations = []
-    interests = interests.lower()
-    skills = skills.lower()
-    dream = dream.lower()
+    prompt = f"""
+    You are an expert career advisor.
+    The user has given:
 
-    career_map = {
-        "Software Engineer": ["technology", "coding", "programming", "developer"],
-        "UI/UX Designer": ["design", "creative", "ui", "ux", "art"],
-        "Data Scientist": ["data", "analytics", "machine learning", "python"],
-        "Business Analyst": ["business", "management", "strategy", "analytics"],
-        "Marketing / Content Strategist": ["communication", "marketing", "content", "public speaking"],
-        "Researcher / Scientist": ["research", "science", "laboratory", "analysis"],
-        "Entrepreneur / Startup": ["startup", "entrepreneur", "innovation", "business"]
-    }
+    Interests: {interests}
+    Skills: {skills}
+    Dream Career Area: {dream}
 
-    for career, keywords in career_map.items():
-        score = 0
-        for kw in keywords:
-            if kw in interests or kw in skills or kw in dream:
-                score += 1
-        if score > 0:
-            recommendations.append({
-                "title": career,
-                "reason": f"Matched {score} keywords from your profile indicating suitability for {career}."
-            })
+    Give 4 highly relevant and realistic career recommendations.
+    For each recommendation give:
 
-    if len(recommendations) == 0:
-        recommendations.append({
-            "title": "Career Counselor Consultation Recommended",
-            "reason": "Your profile suggests multiple possibilities; consider personalized guidance."
-        })
-    return recommendations
+    1. Job Title
+    2. Why it fits the user
+    3. What skills they need to improve
+
+    Output in clean JSON format:
+    [
+      {{
+        "title": "...",
+        "reason": "...",
+        "improvements": "..."
+      }}
+    ]
+    """
+
+    try:
+        response = genai.GenerativeModel("gemini-1.5-flash").generate_content(prompt)
+        return response.text
+    except Exception as e:
+        return {"error": str(e)}

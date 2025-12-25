@@ -11,7 +11,14 @@ if (!data || !data.recommendations || data.recommendations.length === 0) {
     data.recommendations.forEach(item => {
         const card = document.createElement("div");
         card.classList.add("card");
-        card.innerHTML = `<h3>${item.title}</h3><p>${item.reason}</p>`;
+
+        card.innerHTML = `
+            <h3>${item.title}</h3>
+            <p><strong>Why:</strong> ${item.reason}</p>
+            <p><strong>Future Scope:</strong> ${item.future_scope}</p>
+            <p><strong>Difficulty:</strong> ${item.difficulty}</p>
+        `;
+
         container.appendChild(card);
     });
 }

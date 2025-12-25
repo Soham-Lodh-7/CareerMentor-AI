@@ -6,12 +6,7 @@ document.getElementById("careerForm").addEventListener("submit", async function 
     const skills = document.getElementById("skills").value;
     const dream = document.getElementById("dream").value;
 
-    const payload = {
-        name,
-        interests,
-        skills,
-        dream
-    };
+    const payload = { name, interests, skills, dream };
 
     try {
         const response = await fetch("http://127.0.0.1:5000/recommend", {
@@ -19,8 +14,13 @@ document.getElementById("careerForm").addEventListener("submit", async function 
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         });
+
         const result = await response.json();
-        if (result.status === "success") {
+
+        console.log("Backend response:", result);
+
+        if (result.recommendations) {
+            result.name = name;
             localStorage.setItem("career_results", JSON.stringify(result));
             window.location.href = "result.html";
         } else {
